@@ -104,6 +104,8 @@
           <h3><i class="fas fa-calculator me-2"></i>Calcular Precio Final</h3>
         </div>
         <div class="card-body p-4">
+
+          <!-- Tipo de Moneda -->
           <div class="mb-4">
             <label for="tipoMoneda" class="form-label">
               <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
@@ -114,13 +116,18 @@
             </select>
           </div>
 
+          <!-- TRM -->
           <div id="trmInfo" class="mb-4" style="display:none">
             <div class="alert alert-info d-flex align-items-center">
               <i class="fas fa-exchange-alt me-2"></i>
-              <div><strong>TRM:</strong> $<span id="trmValue">0,00</span> COP por USD</div>
+              <div>
+                <strong>TRM Actual:</strong>
+                $<span id="trmValue">0,00</span> COP por USD
+              </div>
             </div>
           </div>
 
+          <!-- Costo Bruto -->
           <div class="mb-4">
             <label for="costoBruto" class="form-label">
               <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
@@ -133,11 +140,15 @@
             <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
             <div id="conversionEnVivo" class="mt-2" style="display:none">
               <div class="alert alert-secondary py-2">
-                <small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small>
+                <small>
+                  <strong>Conversión a COP:</strong>
+                  $<span id="valorConvertido">0,00</span>
+                </small>
               </div>
             </div>
           </div>
 
+          <!-- Rentabilidad -->
           <div class="mb-4">
             <label for="rentabilidad" class="form-label">
               <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
@@ -151,6 +162,7 @@
             </select>
           </div>
 
+          <!-- Botones -->
           <div class="row">
             <div class="col-md-6 mb-3">
               <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
@@ -164,6 +176,7 @@
             </div>
           </div>
 
+          <!-- Resultados -->
           <div id="resultados" class="result-card fade-in" style="display:none">
             <div class="text-center mb-3">
               <div class="icon-container">
@@ -209,24 +222,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
     let TRM = 0;
+    let currentTipo = 'COP';
 
+    // Carga la TRM desde trm.json (actualizado diariamente) sin cache
     async function cargarTRM() {
       try {
-        const res = await fetch(
-          'https://api.exchangerate.host/latest?base=USD&symbols=COP',
-          { cache: 'no-store' }
-        );
+        const res = await fetch('trm.json', { cache: 'no-store' });
         if (!res.ok) throw new Error(res.statusText);
-        const { rates } = await res.json();
-        TRM = rates.COP;
+        const { trm } = await res.json();
+        TRM = trm;
       } catch (err) {
-        console.error('No se pudo obtener la TRM:', err);
+        console.error('Error cargando trm.json:', err);
       }
       document.getElementById('trmValue').textContent =
         TRM.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
-
-    let currentTipo = 'COP';
 
     function cambiarMoneda() {
       const newTipo = document.getElementById('tipoMoneda').value;
@@ -272,10 +282,10 @@
       if (brutoIn <= 0) return alert('El costo debe ser > 0.');
 
       const brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
-      const renta   = brutoCOP * (pct / 100);
-      const empaq   = 800;
-      const pub     = brutoCOP * 0.02;
-      const final   = brutoCOP + renta + empaq + pub;
+      const renta = brutoCOP * (pct / 100);
+      const empaq = 800;
+      const pub = brutoCOP * 0.02;
+      const final = brutoCOP + renta + empaq + pub;
 
       document.getElementById('mostrarCostoBruto').textContent =
         `$${brutoCOP.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} COP`;
@@ -302,10 +312,10 @@
     function resetForm() {
       document.getElementById('costoBruto').value = '';
       document.getElementById('rentabilidad').value = '';
-      document.getElementById('resultados').style.display     = 'none';
-      document.getElementById('trmInfo').style.display        = 'none';
+      document.getElementById('resultados').style.display = 'none';
+      document.getElementById('trmInfo').style.display = 'none';
       document.getElementById('conversionEnVivo').style.display = 'none';
-      document.getElementById('valorConvertido').textContent   = '0,00';
+      document.getElementById('valorConvertido').textContent = '0,00';
       document.getElementById('tipoMoneda').value = 'COP';
       cambiarMoneda();
     }
