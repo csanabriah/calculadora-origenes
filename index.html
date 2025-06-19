@@ -87,9 +87,6 @@
     .input-group .form-control {
       border-left: none; border-radius: 0 12px 12px 0;
     }
-    #trmFecha {
-      font-size: 0.85rem; color: white; opacity: 0.8; margin-top: 0.25rem;
-    }
   </style>
 </head>
 <body>
@@ -108,6 +105,7 @@
         </div>
         <div class="card-body p-4">
 
+          <!-- Tipo de Moneda -->
           <div class="mb-4">
             <label for="tipoMoneda" class="form-label">
               <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
@@ -118,16 +116,20 @@
             </select>
           </div>
 
+          <!-- TRM -->
           <div id="trmInfo" class="mb-4" style="display:none">
             <div class="alert alert-info d-flex flex-column">
               <div>
                 <i class="fas fa-exchange-alt me-2"></i>
                 <strong>TRM:</strong> $<span id="trmValue">0,00</span> COP por USD
               </div>
-              <div id="trmFecha">Actualizado: --</div>
+              <div id="trmFecha" style="font-size:.85rem;opacity:.8;margin-top:.25rem">
+                Actualizado: --
+              </div>
             </div>
           </div>
 
+          <!-- Costo Bruto -->
           <div class="mb-4">
             <label for="costoBruto" class="form-label">
               <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
@@ -140,26 +142,22 @@
             <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
             <div id="conversionEnVivo" class="mt-2" style="display:none">
               <div class="alert alert-secondary py-2">
-                <small>
-                  <strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span>
-                </small>
+                <small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small>
               </div>
             </div>
           </div>
 
+          <!-- Rentabilidad -->
           <div class="mb-4">
             <label for="rentabilidad" class="form-label">
               <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
             </label>
             <select id="rentabilidad" class="form-select">
               <option value="">Seleccione porcentaje</option>
-              <option value="30">30%</option><option value="35">35%</option>
-              <option value="40">40%</option><option value="45">45%</option>
-              <option value="50">50%</option><option value="55">55%</option>
-              <option value="60">60%</option>
             </select>
           </div>
 
+          <!-- Botones -->
           <div class="row">
             <div class="col-md-6 mb-3">
               <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
@@ -173,6 +171,7 @@
             </div>
           </div>
 
+          <!-- Resultados -->
           <div id="resultados" class="result-card fade-in" style="display:none">
             <div class="text-center mb-3">
               <div class="icon-container">
@@ -194,11 +193,11 @@
             </div>
             <div class="result-item">
               <span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span>
-              <span class="currency">$800 COP</span>
+              <span class="currency">$1 000 COP</span>
             </div>
             <div class="result-item">
-              <span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span>
-              <span class="currency" id="mostrarPublicidad">$0,00 COP</span>
+              <span><i class="fas fa-truck me-2"></i>Costo de Envío:</span>
+              <span class="currency">$25 000 COP</span>
             </div>
             <div class="result-item">
               <span><i class="fas fa-tags me-2"></i><strong>PRECIO FINAL:</strong></span>
@@ -219,24 +218,35 @@
   <script>
     let TRM = 0;
     let currentTipo = 'COP';
+    const costoEmpaque = 1000;
+    const costoEnvio = 25000;
 
     async function cargarTRM() {
       try {
         const res = await fetch('trm.json', { cache: 'no-store' });
-        if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
         TRM = data.trm;
-        console.log('TRM leída de:', data.updated_at, 'valor:', TRM);
-        // formatear fecha local
-        const fecha = new Date(data.updated_at).toLocaleString('es-CO', {
-          dateStyle: 'short', timeStyle: 'short'
-        });
-        document.getElementById('trmFecha').textContent = `Actualizado: ${fecha}`;
-      } catch (err) {
-        console.error('Error cargando trm.json:', err);
+        document.getElementById('trmFecha').textContent =
+          'Actualizado: ' +
+          new Date(data.updated_at).toLocaleString('es-CO', {
+            dateStyle: 'short', timeStyle: 'short'
+          });
+      } catch (e) {
+        console.error(e);
       }
       document.getElementById('trmValue').textContent =
         TRM.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function llenarRentabilidad() {
+      const sel = document.getElementById('rentabilidad');
+      sel.innerHTML = '<option value="">Seleccione porcentaje</option>';
+      for (let i = 30; i <= 200; i += 5) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.text = i + '%';
+        sel.append(opt);
+      }
     }
 
     function cambiarMoneda() {
@@ -251,7 +261,7 @@
         } else if (currentTipo === 'USD' && newTipo === 'COP') {
           val = val * TRM;
           input.step = '0.01';
-          input.value = (Math.round(val * 100) / 100).toFixed(2);
+          input.value = (val).toFixed(2);
         }
       }
       document.getElementById('simboloMoneda').textContent = '$';
@@ -277,29 +287,30 @@
       const brutoIn = parseFloat(document.getElementById('costoBruto').value);
       const pct = parseInt(document.getElementById('rentabilidad').value);
       if (!brutoIn || !pct) return alert('Complete todos los campos.');
-      if (brutoIn <= 0) return alert('El costo debe ser > 0.');
       const brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
       const renta = brutoCOP * (pct / 100);
-      const empaq = 800;
       const pub = brutoCOP * 0.02;
-      const final = brutoCOP + renta + empaq + pub;
+      const final =
+        brutoCOP + renta + costoEmpaque + pub + costoEnvio;
+
       document.getElementById('mostrarCostoBruto').textContent =
-        `$${brutoCOP.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} COP`;
+        `$${brutoCOP.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
       document.getElementById('mostrarPorcentaje').textContent = pct;
       document.getElementById('mostrarRentabilidad').textContent =
-        `$${renta.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} COP`;
+        `$${renta.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
       document.getElementById('mostrarPublicidad').textContent =
-        `$${pub.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} COP`;
+        `$${pub.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
       document.getElementById('precioFinal').textContent =
-        `$${final.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} COP`;
-      const fila = document.getElementById('filaConversion');
+        `$${final.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
+
       if (currentTipo === 'USD') {
         document.getElementById('mostrarCostoUSD').textContent =
-          `$${brutoIn.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-        fila.style.display = 'flex';
+          `$${brutoIn.toLocaleString('es-CO', { minimumFractionDigits: 2 })} USD`;
+        document.getElementById('filaConversion').style.display = 'flex';
       } else {
-        fila.style.display = 'none';
+        document.getElementById('filaConversion').style.display = 'none';
       }
+
       document.getElementById('resultados').style.display = 'block';
     }
 
@@ -316,6 +327,7 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarTRM();
+      llenarRentabilidad();
       cambiarMoneda();
     });
   </script>
