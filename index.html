@@ -18,29 +18,39 @@
     }
     .brand-header {
       background: linear-gradient(135deg, var(--vitrina-red) 0%, #c82519 100%);
-      color: white; padding: 2rem 0; text-align: center;
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
       box-shadow: 0 4px 20px rgba(229,48,37,.3);
     }
     .brand-header .logo-header {
-      max-width: 120px; margin-bottom: 1rem;
+      max-width: 120px;
+      margin-bottom: 1rem;
     }
     .brand-logo {
-      font-size: 2.5rem; font-weight: bold;
+      font-size: 2.5rem;
+      font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0,0,0,.3);
     }
     .card {
-      border: none; border-radius: 20px;
+      border: none;
+      border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,.1);
-      backdrop-filter: blur(10px); background: rgba(255,255,255,.95);
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.95);
     }
     .card-header {
-      background: var(--vitrina-dark); color: white;
-      border-radius: 20px 20px 0 0 !important; padding: 1.5rem;
+      background: var(--vitrina-dark);
+      color: white;
+      border-radius: 20px 20px 0 0 !important;
+      padding: 1.5rem;
     }
     .form-label { color: var(--vitrina-dark); font-weight: 600; }
     .form-control, .form-select {
-      border: 2px solid #e9ecef; border-radius: 12px;
-      padding: .75rem 1rem; transition: all .3s;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: .75rem 1rem;
+      transition: all .3s;
     }
     .form-control:focus, .form-select:focus {
       border-color: var(--vitrina-red);
@@ -48,47 +58,68 @@
     }
     .btn-calculate {
       background: linear-gradient(135deg, var(--vitrina-red) 0%, #c82519 100%);
-      color: white; border: none; border-radius: 12px;
-      padding: 1rem 2rem; font-weight: bold; text-transform: uppercase;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
     }
     .btn-calculate:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(229,48,37,.4);
     }
     .btn-reset {
-      background: #f0f0f0; color: #000; border: none;
-      border-radius: 12px; padding: 1rem 2rem; font-weight: bold;
+      background: #f0f0f0;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: bold;
     }
     .btn-reset:hover {
-      background: #e0e0e0; transform: translateY(-2px);
+      background: #e0e0e0;
+      transform: translateY(-2px);
     }
     .result-card {
       background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-      color: white; border-radius: 15px; padding: 2rem;
-      margin-top: 2rem; box-shadow: 0 8px 25px rgba(40,167,69,.3);
+      color: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 2rem;
+      box-shadow: 0 8px 25px rgba(40,167,69,.3);
     }
     .result-item {
-      display: flex; justify-content: space-between;
-      padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.2);
+      display: flex;
+      justify-content: space-between;
+      padding: .5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.2);
     }
     .result-item:last-child {
-      border: none; margin-top: 1rem;
-      font-size: 1.3rem; font-weight: bold;
+      border: none;
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      font-weight: bold;
     }
     .currency { font-family: 'Courier New', monospace; font-weight: bold; }
     .icon-container {
-      background: rgba(255,255,255,.1); border-radius: 50%;
-      width: 50px; height: 50px; display: flex;
-      align-items: center; justify-content: center;
+      background: rgba(255,255,255,.1);
+      border-radius: 50%;
+      width: 50px; height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 1rem;
     }
     .input-group-text {
-      background: var(--vitrina-red); color: white;
+      background: var(--vitrina-red);
+      color: white;
       border: 2px solid var(--vitrina-red);
       border-radius: 12px 0 0 12px;
     }
     .input-group .form-control {
-      border-left: none; border-radius: 0 12px 12px 0;
+      border-left: none;
+      border-radius: 0 12px 12px 0;
     }
   </style>
 </head>
@@ -132,7 +163,7 @@
               </label>
               <div class="input-group">
                 <span class="input-group-text" id="simboloMoneda">$</span>
-                <input type="number" id="costoBruto" class="form-control" min="0" step="1" placeholder="0.00">
+                <input type="number" id="costoBruto" class="form-control" min="0" step="1">
                 <span class="input-group-text" id="codigoMoneda">COP</span>
               </div>
               <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
@@ -209,12 +240,12 @@
   </div>
 
   <footer class="text-center py-4" style="background: var(--vitrina-dark); color: white;">
-    <div class="container"><p class="mb-0">&copy; 2025 Vitrina Inc.</p></div>
+    <div class="container"><p class="mb-0">© 2025 Vitrina Inc. Todos los derechos reservados.</p></div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
-    let TRM = 0; // arranca en 0, luego sobreescribe con la API
+    let TRM = 0;
 
     async function cargarTRM() {
       try {
@@ -224,7 +255,6 @@
         TRM = json.rates.COP;
       } catch (e) {
         console.error('Error obteniendo TRM:', e);
-        TRM = 4100; // fallback razonable
       }
       document.getElementById('trmValue').textContent = TRM.toLocaleString('es-CO');
     }
