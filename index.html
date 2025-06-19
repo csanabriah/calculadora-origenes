@@ -152,9 +152,7 @@
             <label for="rentabilidad" class="form-label">
               <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
             </label>
-            <select id="rentabilidad" class="form-select">
-              <option value="">Seleccione porcentaje</option>
-            </select>
+            <select id="rentabilidad" class="form-select"></select>
           </div>
 
           <!-- Botones -->
@@ -179,6 +177,7 @@
               </div>
               <h4>Desglose de Costos</h4>
             </div>
+
             <div class="result-item">
               <span><i class="fas fa-box me-2"></i>Costo Bruto:</span>
               <span class="currency" id="mostrarCostoBruto">$0,00 COP</span>
@@ -190,6 +189,10 @@
             <div class="result-item">
               <span><i class="fas fa-chart-line me-2"></i>Rentabilidad (<span id="mostrarPorcentaje">0</span>%):</span>
               <span class="currency" id="mostrarRentabilidad">$0,00 COP</span>
+            </div>
+            <div class="result-item">
+              <span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span>
+              <span class="currency" id="mostrarPublicidad">$0,00 COP</span>
             </div>
             <div class="result-item">
               <span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span>
@@ -240,7 +243,11 @@
 
     function llenarRentabilidad() {
       const sel = document.getElementById('rentabilidad');
-      sel.innerHTML = '<option value="">Seleccione porcentaje</option>';
+      sel.innerHTML = '';
+      const base = document.createElement('option');
+      base.value = '';
+      base.text = 'Seleccione porcentaje';
+      sel.append(base);
       for (let i = 30; i <= 200; i += 5) {
         const opt = document.createElement('option');
         opt.value = i;
@@ -261,7 +268,7 @@
         } else if (currentTipo === 'USD' && newTipo === 'COP') {
           val = val * TRM;
           input.step = '0.01';
-          input.value = (val).toFixed(2);
+          input.value = val.toFixed(2);
         }
       }
       document.getElementById('simboloMoneda').textContent = '$';
@@ -286,12 +293,14 @@
     function calcularPrecio() {
       const brutoIn = parseFloat(document.getElementById('costoBruto').value);
       const pct = parseInt(document.getElementById('rentabilidad').value);
-      if (!brutoIn || !pct) return alert('Complete todos los campos.');
+      if (!brutoIn || !pct) {
+        alert('Complete todos los campos.');
+        return;
+      }
       const brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
       const renta = brutoCOP * (pct / 100);
       const pub = brutoCOP * 0.02;
-      const final =
-        brutoCOP + renta + costoEmpaque + pub + costoEnvio;
+      const final = brutoCOP + renta + pub + costoEmpaque + costoEnvio;
 
       document.getElementById('mostrarCostoBruto').textContent =
         `$${brutoCOP.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
