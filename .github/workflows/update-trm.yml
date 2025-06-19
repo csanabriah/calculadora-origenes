@@ -5,15 +5,15 @@ permissions:
 
 on:
   schedule:
-    - cron: '05 14 * * *'  # 09:05 Bogotá
+    - cron: '05 14 * * *'  # cada día a las 14:05 UTC (09:05 Bogotá)
   workflow_dispatch:
 
 jobs:
   update-trm:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout del repo
+
+      - name: Checkout del repositorio
         uses: actions/checkout@v3
 
       - name: Instalar jq
@@ -21,22 +21,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Obtener y depurar TRM (Frankfurter)
+      - name: Obtener y depurar TRM (datos.gov.co)
         id: fetch
         run: |
-          echo "=== Respuesta cruda Frankfurter ==="
-          curl -s "https://api.frankfurter.app/latest?from=USD&to=COP" > response.json
+          echo "=== Respuesta cruda datos.gov.co ==="
+          # URL entre comillas simples para que Bash no expanda los $select, $order, $limit
+          curl -s 'https://www.datos.gov.co/resource/ceyp-9c7c.json?$select=valor,vigenciadesde&$order=vigenciadesde%20DESC&$limit=1' > response.json
           cat response.json
 
-          TRM=$(jq -r '.rates.COP' response.json)
-          echo "=== TRM extraída: $TRM ==="
+          TRM=$(jq -r '.[0].valor' response.json)
+          DATE=$(jq -r '.[0].vigenciadesde' response.json)
+          echo "=== TRM extraída: $TRM (fecha: $DATE) ==="
           echo "trm=$TRM" >> $GITHUB_OUTPUT
+          echo "updated_at=$DATE" >> $GITHUB_OUTPUT
 
       - name: Generar trm.json
         run: |
           echo '{' > trm.json
           echo "  \"trm\": ${{ steps.fetch.outputs.trm }}," >> trm.json
-          echo "  \"updated_at\": \"$(date --utc +'%Y-%m-%dT%H:%M:%SZ')\"" >> trm.json
+          echo "  \"updated_at\": \"${{ steps.fetch.outputs.updated_at }}\"" >> trm.json
           echo '}' >> trm.json
 
       - name: Commit y push de trm.json
