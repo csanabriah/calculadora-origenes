@@ -1,0 +1,42 @@
+name: Actualizar TRM Diario
+
+on:
+  # Cada día a las 14:05 UTC (09:05 hora Bogotá)
+  schedule:
+    - cron: '05 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-trm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Instalar jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Obtener TRM desde exchangerate.host
+        id: fetch
+        run: |
+          TRM=$(curl -s "https://api.exchangerate.host/latest?base=USD&symbols=COP" \
+            | jq -r '.rates.COP')
+          echo "trm=$TRM" >> $GITHUB_OUTPUT
+
+      - name: Generar trm.json
+        run: |
+          cat <<EOF > trm.json
+          {
+            "trm": ${{ steps.fetch.outputs.trm }},
+            "updated_at": "$(date --utc +'%Y-%m-%dT%H:%M:%SZ')"
+          }
+          EOF
+
+      - name: Commit y push de trm.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trm.json
+          git commit -m "Actualiza TRM ${{ steps.fetch.outputs.trm }} ($(date +'%Y-%m-%d'))" || echo "Sin cambios"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
