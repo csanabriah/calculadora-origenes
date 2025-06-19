@@ -1,18 +1,22 @@
+# .github/workflows/update-trm.yml
 name: Actualizar TRM Diario
 permissions:
-  contents: write
-  pages: write
+  contents: write   # permite escribir en el repo
+  pages: write      # opcional, si usas GitHub Pages
 
 on:
+  # Se ejecuta cada día a las 14:05 UTC (09:05 hora Bogotá)
   schedule:
-    - cron: '05 14 * * *'  # 09:05 Bogotá
+    - cron: '05 14 * * *'
   workflow_dispatch:
 
 jobs:
   update-trm:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
 
       - name: Instalar jq
         run: sudo apt-get update && sudo apt-get install -y jq
