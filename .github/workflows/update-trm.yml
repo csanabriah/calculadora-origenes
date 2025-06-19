@@ -1,18 +1,19 @@
 # .github/workflows/update-trm.yml
 name: Actualizar TRM Diario
 permissions:
-  contents: write
+  contents: write   # permite escribir en el repo
 
 on:
+  # Cada día a las 14:05 UTC (09:05 Bogotá)
   schedule:
-    - cron: '05 14 * * *'  # cada día a las 14:05 UTC (09:05 Bogotá)
+    - cron: '05 14 * * *'
   workflow_dispatch:
 
 jobs:
   update-trm:
     runs-on: ubuntu-latest
-    steps:
 
+    steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v3
 
@@ -24,14 +25,14 @@ jobs:
       - name: Obtener y depurar TRM (datos.gov.co)
         id: fetch
         run: |
-          echo "=== Respuesta cruda datos.gov.co ==="
-          # URL entre comillas simples para que Bash no expanda los $select, $order, $limit
-          curl -s 'https://www.datos.gov.co/resource/ceyp-9c7c.json?$select=valor,vigenciadesde&$order=vigenciadesde%20DESC&$limit=1' > response.json
+          echo "=== Respuesta cruda datos.gov.co (dos últimos) ==="
+          curl -s 'https://www.datos.gov.co/resource/ceyp-9c7c.json?$select=valor,vigenciadesde&$order=vigenciadesde%20DESC&$limit=2' > response.json
           cat response.json
 
-          TRM=$(jq -r '.[0].valor' response.json)
-          DATE=$(jq -r '.[0].vigenciadesde' response.json)
-          echo "=== TRM extraída: $TRM (fecha: $DATE) ==="
+          # Extraer la TRM del día anterior (segundo registro)
+          TRM=$(jq -r '.[1].valor' response.json)
+          DATE=$(jq -r '.[1].vigenciadesde' response.json)
+          echo "=== TRM extraída (día anterior): $TRM (fecha: $DATE) ==="
           echo "trm=$TRM" >> $GITHUB_OUTPUT
           echo "updated_at=$DATE" >> $GITHUB_OUTPUT
 
