@@ -21,7 +21,7 @@
       color: white;
       padding: 2rem 0;
       text-align: center;
-      box-shadow: 0 4px 20px rgba(229, 48, 37, 0.3);
+      box-shadow: 0 4px 20px rgba(229,48,37,.3);
     }
     .brand-header .logo-header {
       max-width: 120px;
@@ -30,14 +30,14 @@
     .brand-logo {
       font-size: 2.5rem;
       font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 2px 2px 4px rgba(0,0,0,.3);
     }
     .card {
       border: none;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,.1);
       backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,.95);
     }
     .card-header {
       background: var(--vitrina-dark);
@@ -45,10 +45,7 @@
       border-radius: 20px 20px 0 0 !important;
       padding: 1.5rem;
     }
-    .form-label {
-      color: var(--vitrina-dark);
-      font-weight: 600;
-    }
+    .form-label { color: var(--vitrina-dark); font-weight: 600; }
     .form-control, .form-select {
       border: 2px solid #e9ecef;
       border-radius: 12px;
@@ -111,8 +108,7 @@
     .icon-container {
       background: rgba(255,255,255,.1);
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -132,14 +128,12 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header class="brand-header">
     <img src="outlet-logo.png" alt="Outlet Logo" class="logo-header">
     <h1 class="brand-logo mb-2">Vitrina Inc</h1>
     <p class="lead mb-0">Calculadora de Precios Final</p>
   </header>
 
-  <!-- Formulario -->
   <div class="container my-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
@@ -149,7 +143,6 @@
           </div>
           <div class="card-body p-4">
 
-            <!-- Tipo de Moneda -->
             <div class="mb-4">
               <label for="tipoMoneda" class="form-label">
                 <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
@@ -160,15 +153,13 @@
               </select>
             </div>
 
-            <!-- TRM -->
             <div id="trmInfo" class="mb-4" style="display:none">
               <div class="alert alert-info d-flex align-items-center">
                 <i class="fas fa-exchange-alt me-2"></i>
-                <div><strong>TRM:</strong> <span id="trmValue">4100</span> COP por USD</div>
+                <div><strong>TRM:</strong> $<span id="trmValue">0</span> COP por USD</div>
               </div>
             </div>
 
-            <!-- Costo Bruto -->
             <div class="mb-4">
               <label for="costoBruto" class="form-label">
                 <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
@@ -186,7 +177,6 @@
               </div>
             </div>
 
-            <!-- Rentabilidad -->
             <div class="mb-4">
               <label for="rentabilidad" class="form-label">
                 <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
@@ -200,7 +190,6 @@
               </select>
             </div>
 
-            <!-- Botones -->
             <div class="row">
               <div class="col-md-6 mb-3">
                 <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
@@ -214,7 +203,6 @@
               </div>
             </div>
 
-            <!-- Resultados -->
             <div id="resultados" class="result-card fade-in" style="display:none">
               <div class="text-center mb-3">
                 <div class="icon-container">
@@ -254,7 +242,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="text-center py-4" style="background: var(--vitrina-dark); color: white;">
     <div class="container">
       <p class="mb-0">&copy; 2025 Vitrina Inc. Todos los derechos reservados.</p>
@@ -263,12 +250,13 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
-    // TRM dinámico
-    let TRM = 4100; // valor por defecto
+    // 1) TRM mutable, con fallback
+    let TRM = 4100;
 
+    // 2) Carga JSON antes de mostrar
     async function cargarTRM() {
       try {
-        const res = await fetch('trm.json');
+        const res  = await fetch('trm.json');
         if (!res.ok) throw new Error(res.status);
         const data = await res.json();
         TRM = data.trm;
@@ -298,11 +286,11 @@
       }
 
       document.getElementById('simboloMoneda').textContent = '$';
-      document.getElementById('codigoMoneda').textContent = newTipo;
-      document.getElementById('trmInfo').style.display = newTipo === 'USD' ? 'block' : 'none';
-      document.getElementById('conversionEnVivo').style.display = newTipo === 'USD' ? 'block' : 'none';
+      document.getElementById('codigoMoneda').textContent  = newTipo;
+      document.getElementById('trmInfo').style.display     = newTipo==='USD' ? 'block' : 'none';
+      document.getElementById('conversionEnVivo').style.display = newTipo==='USD' ? 'block' : 'none';
       document.getElementById('textoAyuda').textContent =
-        newTipo === 'USD'
+        newTipo==='USD'
           ? 'Ingrese el costo en dólares (se convertirá al calcular)'
           : 'Ingrese el costo en pesos';
 
@@ -310,32 +298,24 @@
     }
 
     document.getElementById('costoBruto').addEventListener('input', function() {
-      const val = parseFloat(this.value) || 0;
-      if (currentTipo === 'USD' && val > 0) {
-        document.getElementById('valorConvertido').textContent =
-          (val * TRM).toLocaleString('es-CO', { minimumFractionDigits: 0 });
-      } else {
-        document.getElementById('valorConvertido').textContent = '0';
-      }
+      const v = parseFloat(this.value) || 0;
+      document.getElementById('valorConvertido').textContent =
+        (currentTipo==='USD' && v>0)
+          ? (v * TRM).toLocaleString('es-CO', {minimumFractionDigits:0})
+          : '0';
     });
 
     function calcularPrecio() {
       const brutoIn = parseFloat(document.getElementById('costoBruto').value);
-      const pct = parseInt(document.getElementById('rentabilidad').value);
-      if (!brutoIn || !pct) {
-        alert('Complete todos los campos.');
-        return;
-      }
-      if (brutoIn <= 0) {
-        alert('El costo debe ser mayor a 0.');
-        return;
-      }
+      const pct     = parseInt(document.getElementById('rentabilidad').value);
+      if (!brutoIn || !pct) return alert('Complete todos los campos.');
+      if (brutoIn <= 0)    return alert('El costo debe ser > 0.');
 
-      let brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
-      const renta = brutoCOP * (pct / 100);
-      const empaq = 800;
-      const pub = brutoCOP * 0.02;
-      const final = brutoCOP + renta + empaq + pub;
+      const brutoCOP = currentTipo==='USD' ? brutoIn*TRM : brutoIn;
+      const renta    = brutoCOP*(pct/100);
+      const empaq    = 800;
+      const pub      = brutoCOP*0.02;
+      const final    = brutoCOP + renta + empaq + pub;
 
       document.getElementById('mostrarCostoBruto').textContent =
         `$${brutoCOP.toLocaleString('es-CO')} COP`;
@@ -348,7 +328,7 @@
         `$${final.toLocaleString('es-CO')} COP`;
 
       const fila = document.getElementById('filaConversion');
-      if (currentTipo === 'USD') {
+      if (currentTipo==='USD') {
         document.getElementById('mostrarCostoUSD').textContent =
           `$${brutoIn.toLocaleString('es-CO')} USD`;
         fila.style.display = 'flex';
@@ -362,16 +342,16 @@
     function resetForm() {
       document.getElementById('costoBruto').value = '';
       document.getElementById('rentabilidad').value = '';
-      document.getElementById('resultados').style.display = 'none';
-      document.getElementById('trmInfo').style.display = 'none';
+      document.getElementById('resultados').style.display     = 'none';
+      document.getElementById('trmInfo').style.display        = 'none';
       document.getElementById('conversionEnVivo').style.display = 'none';
-      document.getElementById('valorConvertido').textContent = '0';
+      document.getElementById('valorConvertido').textContent   = '0';
       document.getElementById('tipoMoneda').value = 'COP';
       cambiarMoneda();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      cargarTRM();
+    window.addEventListener('DOMContentLoaded', async () => {
+      await cargarTRM();
       cambiarMoneda();
     });
   </script>
