@@ -1,7 +1,7 @@
 name: Actualizar TRM Diario
 permissions:
-  contents: write   # da permiso para escribir en el repo
-  pages: write      # si usas GitHub Pages, opcional
+  contents: write
+  pages: write
 
 on:
   # Cada día a las 14:05 UTC (09:05 hora Bogotá)
@@ -28,11 +28,11 @@ jobs:
       - name: Generar trm.json
         run: |
           cat <<EOF > trm.json
-          {
-            "trm": ${{ steps.fetch.outputs.trm }},
-            "updated_at": "$(date --utc +'%Y-%m-%dT%H:%M:%SZ')"
-          }
-          EOF
+{
+  "trm": ${{ steps.fetch.outputs.trm }},
+  "updated_at": "$(date --utc +'%Y-%m-%dT%H:%M:%SZ')"
+}
+EOF
 
       - name: Commit y push de trm.json
         run: |
