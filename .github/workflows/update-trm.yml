@@ -1,12 +1,11 @@
 # .github/workflows/update-trm.yml
 name: Actualizar TRM Diario
 permissions:
-  contents: write   # permite escribir en el repositorio
+  contents: write
 
 on:
-  # Se ejecuta cada día a las 14:05 UTC (09:05 en Bogotá)
   schedule:
-    - cron: '05 14 * * *'
+    - cron: '05 14 * * *'  # 09:05 Bogotá
   workflow_dispatch:
 
 jobs:
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del repositorio
+      - name: Checkout del repo
         uses: actions/checkout@v3
 
       - name: Instalar jq
@@ -22,18 +21,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y jq
 
-      - name: Obtener y depurar TRM (Frankfurter.dev)
+      - name: Obtener y depurar TRM (Frankfurter)
         id: fetch
         run: |
-          echo "=== Respuesta cruda Frankfurter.dev ==="
-          curl -s "https://api.frankfurter.dev/v1/latest?base=USD&symbols=COP" > response.json
+          echo "=== Respuesta cruda Frankfurter ==="
+          curl -s "https://api.frankfurter.app/latest?from=USD&to=COP" > response.json
           cat response.json
 
-          # Extraer la tasa
           TRM=$(jq -r '.rates.COP' response.json)
           echo "=== TRM extraída: $TRM ==="
-
-          # Exponerla como output del step
           echo "trm=$TRM" >> $GITHUB_OUTPUT
 
       - name: Generar trm.json
