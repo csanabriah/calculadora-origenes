@@ -1,4 +1,7 @@
 name: Actualizar TRM Diario
+permissions:
+  contents: write   # da permiso para escribir en el repo
+  pages: write      # si usas GitHub Pages, opcional
 
 on:
   # Cada día a las 14:05 UTC (09:05 hora Bogotá)
