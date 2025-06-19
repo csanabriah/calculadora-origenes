@@ -131,6 +131,7 @@
   </style>
 </head>
 <body>
+
   <!-- Header -->
   <header class="brand-header">
     <img src="outlet-logo.png" alt="Outlet Logo" class="logo-header">
@@ -147,6 +148,8 @@
             <h3><i class="fas fa-calculator me-2"></i>Calcular Precio Final</h3>
           </div>
           <div class="card-body p-4">
+
+            <!-- Tipo de Moneda -->
             <div class="mb-4">
               <label for="tipoMoneda" class="form-label">
                 <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
@@ -155,16 +158,17 @@
                 <option value="COP" selected>Pesos Colombianos (COP)</option>
                 <option value="USD">Dólares Americanos (USD)</option>
               </select>
-              <div class="form-text">Seleccione la moneda en la que ingresará el costo</div>
             </div>
 
+            <!-- TRM -->
             <div id="trmInfo" class="mb-4" style="display:none">
               <div class="alert alert-info d-flex align-items-center">
                 <i class="fas fa-exchange-alt me-2"></i>
-                <div><strong>TRM Fija:</strong> <span id="trmValue">4100</span> COP por USD</div>
+                <div><strong>TRM:</strong> <span id="trmValue">4100</span> COP por USD</div>
               </div>
             </div>
 
+            <!-- Costo Bruto -->
             <div class="mb-4">
               <label for="costoBruto" class="form-label">
                 <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
@@ -182,6 +186,7 @@
               </div>
             </div>
 
+            <!-- Rentabilidad -->
             <div class="mb-4">
               <label for="rentabilidad" class="form-label">
                 <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
@@ -195,6 +200,7 @@
               </select>
             </div>
 
+            <!-- Botones -->
             <div class="row">
               <div class="col-md-6 mb-3">
                 <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
@@ -241,6 +247,7 @@
                 <span class="currency" id="precioFinal">$0 COP</span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -256,35 +263,46 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
-    const TRM = 4100;
+    // TRM dinámico
+    let TRM = 4100; // valor por defecto
+
+    async function cargarTRM() {
+      try {
+        const res = await fetch('trm.json');
+        if (!res.ok) throw new Error(res.status);
+        const data = await res.json();
+        TRM = data.trm;
+        document.getElementById('trmValue').textContent = TRM.toLocaleString('es-CO');
+      } catch (err) {
+        console.error('Error cargando trm.json:', err);
+      }
+    }
+
     let currentTipo = 'COP';
 
     function cambiarMoneda() {
-      const select = document.getElementById('tipoMoneda');
-      const newTipo = select.value;
+      const newTipo = document.getElementById('tipoMoneda').value;
       const brutoInput = document.getElementById('costoBruto');
       let val = parseFloat(brutoInput.value) || 0;
 
-      // Si cambia la moneda y hay valor, convierto el input
       if (val > 0 && newTipo !== currentTipo) {
         if (currentTipo === 'COP' && newTipo === 'USD') {
           val = val / TRM;
-          brutoInput.step = "0.01";
+          brutoInput.step = '0.01';
           brutoInput.value = val.toFixed(2);
         } else if (currentTipo === 'USD' && newTipo === 'COP') {
           val = val * TRM;
-          brutoInput.step = "1";
+          brutoInput.step = '1';
           brutoInput.value = Math.round(val);
         }
       }
 
-      // Actualizo UI
       document.getElementById('simboloMoneda').textContent = '$';
       document.getElementById('codigoMoneda').textContent = newTipo;
-      document.getElementById('trmInfo').style.display = newTipo==='USD'? 'block':'none';
-      document.getElementById('conversionEnVivo').style.display = newTipo==='USD'? 'block':'none';
+      document.getElementById('trmInfo').style.display = newTipo === 'USD' ? 'block' : 'none';
+      document.getElementById('conversionEnVivo').style.display = newTipo === 'USD' ? 'block' : 'none';
       document.getElementById('textoAyuda').textContent =
-        newTipo==='USD'
+        newTipo === 'USD'
           ? 'Ingrese el costo en dólares (se convertirá al calcular)'
           : 'Ingrese el costo en pesos';
 
@@ -293,7 +311,7 @@
 
     document.getElementById('costoBruto').addEventListener('input', function() {
       const val = parseFloat(this.value) || 0;
-      if (currentTipo==='USD' && val>0) {
+      if (currentTipo === 'USD' && val > 0) {
         document.getElementById('valorConvertido').textContent =
           (val * TRM).toLocaleString('es-CO', { minimumFractionDigits: 0 });
       } else {
@@ -303,9 +321,7 @@
 
     function calcularPrecio() {
       const brutoIn = parseFloat(document.getElementById('costoBruto').value);
-      const pct    = parseInt(document.getElementById('rentabilidad').value);
-      const tipo   = currentTipo;
-
+      const pct = parseInt(document.getElementById('rentabilidad').value);
       if (!brutoIn || !pct) {
         alert('Complete todos los campos.');
         return;
@@ -315,14 +331,12 @@
         return;
       }
 
-      // Convierto a COP para cálculo
-      let brutoCOP = tipo==='USD' ? brutoIn * TRM : brutoIn;
-      const renta = brutoCOP * (pct/100);
+      let brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
+      const renta = brutoCOP * (pct / 100);
       const empaq = 800;
-      const pub   = brutoCOP * 0.02;
+      const pub = brutoCOP * 0.02;
       const final = brutoCOP + renta + empaq + pub;
 
-      // Muestro resultados
       document.getElementById('mostrarCostoBruto').textContent =
         `$${brutoCOP.toLocaleString('es-CO')} COP`;
       document.getElementById('mostrarPorcentaje').textContent = pct;
@@ -334,7 +348,7 @@
         `$${final.toLocaleString('es-CO')} COP`;
 
       const fila = document.getElementById('filaConversion');
-      if (tipo==='USD') {
+      if (currentTipo === 'USD') {
         document.getElementById('mostrarCostoUSD').textContent =
           `$${brutoIn.toLocaleString('es-CO')} USD`;
         fila.style.display = 'flex';
@@ -343,7 +357,6 @@
       }
 
       document.getElementById('resultados').style.display = 'block';
-      document.getElementById('resultados').scrollIntoView({behavior:'smooth'});
     }
 
     function resetForm() {
@@ -357,9 +370,8 @@
       cambiarMoneda();
     }
 
-    // Al cargar
     window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('trmValue').textContent = TRM;
+      cargarTRM();
       cambiarMoneda();
     });
   </script>
