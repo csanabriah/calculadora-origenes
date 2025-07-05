@@ -218,7 +218,7 @@
       const renta=brutoCOP*(pct/100);
       const pub=brutoCOP*0.02;
       const efectivo=brutoCOP+renta+pub+costoEmpaque+costoEnvio;
-      const tarjeta=efectivo*0.0523; // igual al efectivo
+      const tarjeta=efectivo*1.0523; // Efectico + 5.23% de recargo
       document.getElementById('mostrarCostoBruto').textContent='$'+brutoCOP.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP';
       document.getElementById('mostrarPorcentaje').textContent=pct;
       document.getElementById('mostrarRentabilidad').textContent='$'+renta.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP';
