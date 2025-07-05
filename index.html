@@ -194,7 +194,7 @@
     function llenarRentabilidad(){
       const sel=document.getElementById('rentabilidad'); sel.innerHTML='';
       const opc=document.createElement('option'); opc.value=''; opc.text='Seleccione porcentaje'; sel.append(opc);
-      for(let i=30;i<=200;i+=5){const o=document.createElement('option'); o.value=i; o.text=i+'%'; sel.append(o);}    }
+      for(let i=20;i<=200;i+=5){const o=document.createElement('option'); o.value=i; o.text=i+'%'; sel.append(o);}    }
     function cambiarMoneda(){
       const n=document.getElementById('tipoMoneda').value;
       const inp=document.getElementById('costoBruto'); let v=parseFloat(inp.value)||0;
