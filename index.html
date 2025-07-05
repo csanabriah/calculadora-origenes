@@ -2,130 +2,57 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Vitrina Inc – Calculadora de Precios</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    :root {
-      --vitrina-red: #E53025;
-      --vitrina-dark: #3A3A3A;
-    }
-    body {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-    }
-    .brand-header {
-      background: linear-gradient(135deg, var(--vitrina-red) 0%, #c82519 100%);
-      color: white; padding: 2rem 0; text-align: center;
-      box-shadow: 0 4px 20px rgba(229,48,37,.3);
-    }
-    .brand-header .logo-header {
-      max-width: 120px; margin-bottom: 1rem;
-    }
-    .brand-logo {
-      font-size: 2.5rem; font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0,0,0,.3);
-    }
-    .card {
-      border: none; border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.1);
-      backdrop-filter: blur(10px); background: rgba(255,255,255,.95);
-    }
-    .card-header {
-      background: var(--vitrina-dark); color: white;
-      border-radius: 20px 20px 0 0 !important; padding: 1.5rem;
-    }
+    :root { --vitrina-red: #E53025; --vitrina-dark: #3A3A3A; }
+    body { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; min-height: 100vh; }
+    .brand-header { background: linear-gradient(135deg, var(--vitrina-red), #c82519); color: #fff; padding: 2rem 0; text-align: center; box-shadow: 0 4px 20px rgba(229,48,37, .3); }
+    .logo-header { max-width: 120px; margin-bottom: 1rem; }
+    .brand-logo { font-size: 2.5rem; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,.3); }
+    .card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.1); backdrop-filter: blur(10px); background: rgba(255,255,255,.95); }
+    .card-header { background: var(--vitrina-dark); color: #fff; border-radius: 20px 20px 0 0; padding: 1.5rem; }
     .form-label { color: var(--vitrina-dark); font-weight: 600; }
-    .form-control, .form-select {
-      border: 2px solid #e9ecef; border-radius: 12px;
-      padding: .75rem 1rem; transition: all .3s;
-    }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--vitrina-red);
-      box-shadow: 0 0 0 .2rem rgba(229,48,37,.25);
-    }
-    .btn-calculate {
-      background: linear-gradient(135deg, var(--vitrina-red) 0%, #c82519 100%);
-      color: white; border: none; border-radius: 12px;
-      padding: 1rem 2rem; font-weight: bold; text-transform: uppercase;
-    }
-    .btn-calculate:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(229,48,37,.4);
-    }
-    .btn-reset {
-      background: #f0f0f0; color: #000; border: none; border-radius: 12px;
-      padding: 1rem 2rem; font-weight: bold;
-    }
-    .btn-reset:hover {
-      background: #e0e0e0; transform: translateY(-2px);
-    }
-    .result-card {
-      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-      color: white; border-radius: 15px; padding: 2rem; margin-top: 2rem;
-      box-shadow: 0 8px 25px rgba(40,167,69,.3);
-    }
-    .result-item {
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap;
-      padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.2);
-    }
-    .result-item:last-child {
-      border: none; margin-top: 1rem; font-size: 1.3rem; font-weight: bold;
-    }
+    .form-control, .form-select { border: 2px solid #e9ecef; border-radius: 12px; padding: .75rem 1rem; transition: all .3s; }
+    .form-control:focus, .form-select:focus { border-color: var(--vitrina-red); box-shadow: 0 0 0 .2rem rgba(229,48,37,.25); }
+    .btn-calculate, .btn-reset { border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+    .btn-calculate { background: linear-gradient(135deg, var(--vitrina-red), #c82519); color: #fff; padding: 1rem 2rem; border: none; }
+    .btn-calculate:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(229,48,37,.4); }
+    .btn-reset { background: #f0f0f0; color: #000; padding: 1rem 2rem; border: none; }
+    .btn-reset:hover { background: #e0e0e0; transform: translateY(-2px); }
+    .result-card { background: linear-gradient(135deg, #28a745, #20c997); color: #fff; border-radius: 15px; padding: 2rem; margin-top: 2rem; box-shadow: 0 8px 25px rgba(40,167,69,.3); }
+    .result-item { display: flex; justify-content: space-between; align-items: center; padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.2); }
+    .result-item:last-child { border: none; margin-top: 1rem; font-size: 1.3rem; font-weight: bold; }
     .currency { font-family: 'Courier New', monospace; font-weight: bold; }
-    .icon-container {
-      background: rgba(255,255,255,.1); border-radius: 50%;
-      width: 50px; height: 50px; display: flex;
-      align-items: center; justify-content: center; margin: 0 auto 1rem;
-    }
-    .input-group-text {
-      background: var(--vitrina-red); color: white;
-      border: 2px solid var(--vitrina-red); border-radius: 12px 0 0 12px;
-    }
-    .input-group .form-control {
-      border-left: none; border-radius: 0 12px 12px 0;
-    }
-    /* Responsive font sizes */
+    .icon-container { background: rgba(255,255,255,.1); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .input-group-text { background: var(--vitrina-red); color: #fff; border: 2px solid var(--vitrina-red); border-radius: 12px 0 0 12px; }
+    .input-group .form-control { border-left: none; border-radius: 0 12px 12px 0; }
     @media (max-width: 576px) {
-      .form-label { font-size: .9rem; }
-      .form-control, .form-select { font-size: .9rem; }
-      .btn-calculate, .btn-reset { font-size: .9rem; padding: .75rem 1rem; }
+      .form-label, .form-control, .form-select, .btn-calculate, .btn-reset { font-size: .9rem; }
+      .btn-calculate, .btn-reset { padding: .75rem 1rem; }
     }
-    @media (min-width: 577px) and (max-width: 992px) {
-      .form-label { font-size: 1rem; }
-      .form-control, .form-select { font-size: 1rem; }
-    }
-    @media (min-width: 993px) {
-      .form-label { font-size: 1.1rem; }
-      .form-control, .form-select { font-size: 1.1rem; }
-    }
+    @media (min-width: 577px) and (max-width: 992px) { .form-label, .form-control, .form-select { font-size: 1rem; } }
+    @media (min-width: 993px) { .form-label, .form-control, .form-select { font-size: 1.1rem; } }
   </style>
 </head>
 <body>
-
   <header class="brand-header">
     <img src="outlet-logo.png" alt="Outlet Logo" class="logo-header">
     <h1 class="brand-logo mb-2">Vitrina Inc</h1>
     <p class="lead mb-0">Calculadora de Precio Final</p>
   </header>
-
   <div class="container my-5">
     <div class="row justify-content-center">
-      <div class="col-lg-8">
+      <div class="col-12 col-md-10 col-lg-8">
         <div class="card">
           <div class="card-header text-center">
             <h3><i class="fas fa-calculator me-2"></i>Calcular Precio Final</h3>
           </div>
           <div class="card-body p-4">
-
-            <!-- Tipo de Moneda -->
             <div class="row mb-4 align-items-center">
-              <label for="tipoMoneda" class="col-sm-4 form-label">
-                <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
-              </label>
+              <label for="tipoMoneda" class="col-sm-4 form-label"><i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda</label>
               <div class="col-sm-8">
                 <select id="tipoMoneda" class="form-select" onchange="cambiarMoneda()">
                   <option value="COP" selected>Pesos Colombianos (COP)</option>
@@ -133,155 +60,62 @@
                 </select>
               </div>
             </div>
-
-            <!-- TRM -->
             <div id="trmInfo" class="mb-4" style="display:none">
-              <div class="alert alert-info d-flex flex-column">
-                <div>
-                  <i class="fas fa-exchange-alt me-2"></i>
+              <div class="alert alert-info">
+                <div class="d-flex justify-content-between align-items-center">
                   <strong>TRM:</strong> $<span id="trmValue">0,00</span> COP por USD
-                </div>
-                <div id="trmFecha" style="font-size:.85rem;opacity:.8;margin-top:.25rem">
-                  Actualizado: --
+                  <small id="trmFecha" style="opacity:.8"></small>
                 </div>
               </div>
             </div>
-
-            <!-- Costo Bruto -->
             <div class="row mb-4 align-items-center">
-              <label for="costoBruto" class="col-sm-4 form-label">
-                <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
-              </label>
+              <label for="costoBruto" class="col-sm-4 form-label"><i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto</label>
               <div class="col-sm-8">
                 <div class="input-group">
                   <span class="input-group-text" id="simboloMoneda">$</span>
-                  <input type="number" id="costoBruto" class="form-control" min="0" step="0.01">
+                  <input type="number" id="costoBruto" class="form-control" min="0" step="0.01" oninput="mostrarConversion()">
                   <span class="input-group-text" id="codigoMoneda">COP</span>
                 </div>
                 <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
                 <div id="conversionEnVivo" class="mt-2" style="display:none">
-                  <div class="alert alert-secondary py-2">
-                    <small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small>
-                  </div>
+                  <div class="alert alert-secondary py-2"><small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small></div>
                 </div>
               </div>
             </div>
-
-            <!-- Rentabilidad -->
             <div class="row mb-4 align-items-center">
-              <label for="rentabilidad" class="col-sm-4 form-label">
-                <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
-              </label>
-              <div class="col-sm-8">
-                <select id="rentabilidad" class="form-select"></select>
-              </div>
+              <label for="rentabilidad" class="col-sm-4 form-label"><i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad</label>
+              <div class="col-sm-8"><select id="rentabilidad" class="form-select"></select></div>
             </div>
-
-            <!-- Botones -->
             <div class="row">
-              <div class="col-md-6 mb-3">
-                <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
-                  <i class="fas fa-calculator me-2"></i>Calcular Precio
-                </button>
-              </div>
-              <div class="col-md-6 mb-3">
-                <button type="button" class="btn btn-reset w-100" onclick="resetForm()">
-                  <i class="fas fa-refresh me-2"></i>Limpiar
-                </button>
-              </div>
+              <div class="col-6 mb-3"><button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()"><i class="fas fa-calculator me-2"></i>Calcular Precio</button></div>
+              <div class="col-6 mb-3"><button type="button" class="btn btn-reset w-100" onclick="resetForm()"><i class="fas fa-refresh me-2"></i>Limpiar</button></div>
             </div>
-
-            <!-- Resultados -->
-            <div id="resultados" class="result-card fade-in" style="display:none">
-              <div class="text-center mb-3">
-                <div class="icon-container">
-                  <i class="fas fa-receipt text-white fa-2x"></i>
-                </div>
-                <h4>Desglose de Costos</h4>
-              </div>
-
-              <div class="result-item">
-                <span><i class="fas fa-box me-2"></i>Costo Bruto:</span>
-                <span class="currency" id="mostrarCostoBruto">$0,00 COP</span>
-              </div>
-              <div class="result-item" id="filaConversion" style="display:none">
-                <span><i class="fas fa-exchange-alt me-2"></i>Costo Original (USD):</span>
-                <span class="currency" id="mostrarCostoUSD">$0,00 USD</span>
-              </div>
-              <div class="result-item">
-                <span><i class="fas fa-chart-line me-2"></i>Rentabilidad (<span id="mostrarPorcentaje">0</span>%):</span>
-                <span class="currency" id="mostrarRentabilidad">$0,00 COP</span>
-              </div>
-              <div class="result-item">
-                <span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span>
-                <span class="currency" id="mostrarPublicidad">$0,00 COP</span>
-              </div>
-              <div class="result-item">
-                <span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span>
-                <span class="currency">$1 000 COP</span>
-              </div>
-              <div class="result-item">
-                <span><i class="fas fa-truck me-2"></i>Costo de Envío:</span>
-                <span class="currency">$25 000 COP</span>
-              </div>
-              <div class="result-item">
-                <span><i class="fas fa-tags me-2"></i><strong>PRECIO FINAL:</strong></span>
-                <span class="currency" id="precioFinal">$0,00 COP</span>
-              </div>
+            <div id="resultados" class="result-card" style="display:none">
+              <div class="text-center mb-3"><div class="icon-container"><i class="fas fa-receipt text-white fa-2x"></i></div><h4>Desglose de Costos</h4></div>
+              <div class="result-item"><span><i class="fas fa-box me-2"></i>Costo Bruto:</span><span class="currency" id="mostrarCostoBruto">$0,00 COP</span></div>
+              <div class="result-item" id="filaConversion" style="display:none"><span><i class="fas fa-exchange-alt me-2"></i>Costo Original (USD):</span><span class="currency" id="mostrarCostoUSD">$0,00 USD</span></div>
+              <div class="result-item"><span><i class="fas fa-chart-line me-2"></i>Rentabilidad (<span id="mostrarPorcentaje">0</span>%):</span><span class="currency" id="mostrarRentabilidad">$0,00 COP</span></div>
+              <div class="result-item"><span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span><span class="currency" id="mostrarPublicidad">$0,00 COP</span></div>
+              <div class="result-item"><span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span><span class="currency">$1 000 COP</span></div>
+              <div class="result-item"><span><i class="fas fa-truck me-2"></i>Costo de Envío:</span><span class="currency">$25 000 COP</span></div>
+              <div class="result-item"><span><i class="fas fa-tags me-2"></i><strong>PRECIO FINAL:</strong></span><span class="currency" id="precioFinal">$0,00 COP</span></div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <footer class="text-center py-4" style="background: var(--vitrina-dark); color: white;">
-    <div class="container"><p class="mb-0">© 2025 Vitrina Inc. Todos los derechos reservados.</p></div>
-  </footer>
-
+  <footer class="text-center py-4" style="background: var(--vitrina-dark); color: #fff;"><div class="container"><p class="mb-0">© 2025 Vitrina Inc. Todos los derechos reservados.</p></div></footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
-    let TRM = 0;
-    let currentTipo = 'COP';
-    const costoEmpaque = 1000;
-    const costoEnvio = 25000;
-
-    async function cargarTRM() {
-      try {
-        const res = await fetch('trm.json', { cache: 'no-store' });
-        const data = await res.json();
-        TRM = data.trm;
-        document.getElementById('trmFecha').textContent =
-          'Actualizado: ' +
-          new Date(data.updated_at).toLocaleString('es-CO', {
-            dateStyle: 'short', timeStyle: 'short'
-          });
-      } catch (e) {
-        console.error(e);
-      }
-      document.getElementById('trmValue').textContent =
-        TRM.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function llenarRentabilidad() {
-      const sel = document.getElementById('rentabilidad');
-      sel.innerHTML = '';
-      const base = document.createElement('option');
-      base.value = '';
-      base.text = 'Seleccione porcentaje';
-      sel.append(base);
-      for (let i = 30; i <= 200; i += 5) {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.text = i + '%';
-        sel.append(opt);
-      }
-    }
-
-    function cambiarMoneda() {
-      const newTipo = document.getElementById('tipoMoneda').value;
-      const input = document.getElementById('costoBruto');
-      let val = parseFloat(input.value) || 0;
-      if (val > 0 && newTipo !== currentTipo) {
-        if (currentTipo === 'COP' && newTipo === truncated for brevity
+    let TRM=0, currentTipo='COP', costoEmpaque=1000, costoEnvio=25000;
+    async function cargarTRM(){ try{ let res=await fetch('trm.json',{cache:'no-store'}), data=await res.json(); TRM=data.trm; document.getElementById('trmFecha').textContent=new Date(data.updated_at).toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});}catch(e){console.error(e);} document.getElementById('trmValue').textContent=TRM.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+    function llenarRentabilidad(){ let s=document.getElementById('rentabilidad'); s.innerHTML=''; let opt=document.createElement('option'); opt.value=''; opt.text='Seleccione porcentaje'; s.append(opt); for(let i=30;i<=200;i+=5){let o=document.createElement('option'); o.value=i; o.text=i+'%'; s.append(o);} }
+    function cambiarMoneda(){ let n=document.getElementById('tipoMoneda').value, inp=document.getElementById('costoBruto'), v=parseFloat(inp.value)||0; if(v>0&&n!==currentTipo){ v=n==='USD'?v/TRM:v*TRM; inp.value=v.toFixed(2);} document.getElementById('simboloMoneda').textContent='$'; document.getElementById('codigoMoneda').textContent=n; document.getElementById('trmInfo').style.display=n==='USD'?'block':'none'; document.getElementById('conversionEnVivo').style.display=n==='USD'?'block':'none'; document.getElementById('textoAyuda').textContent=n==='USD'?'Ingrese el costo en dólares (se convertirá al calcular)':'Ingrese el costo base en pesos'; currentTipo=n; mostrarConversion(); }
+    function mostrarConversion(){ let v=parseFloat(document.getElementById('costoBruto').value)||0; document.getElementById('valorConvertido').textContent=currentTipo==='USD'&&v>0?(v*TRM).toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}):'0,00'; }
+    function calcularPrecio(){ let bruto=parseFloat(document.getElementById('costoBruto').value), pct=parseInt(document.getElementById('rentabilidad').value); if(!bruto||!pct){ return alert('Complete todos los campos.');} let brutoCOP=currentTipo==='USD'?bruto*TRM:bruto, renta=brutoCOP*(pct/100), pub=brutoCOP*0.02, total=brutoCOP+renta+pub+costoEmpaque+costoEnvio; document.getElementById('mostrarCostoBruto').textContent='$'+brutoCOP.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP'; document.getElementById('mostrarPorcentaje').textContent=pct; document.getElementById('mostrarRentabilidad').textContent='$'+renta.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP'; document.getElementById('mostrarPublicidad').textContent='$'+pub.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP'; document.getElementById('precioFinal').textContent='$'+total.toLocaleString('es-CO',{minimumFractionDigits:2})+' COP'; if(currentTipo==='USD'){ document.getElementById('mostrarCostoUSD').textContent='$'+bruto.toLocaleString('es-CO',{minimumFractionDigits:2})+' USD'; document.getElementById('filaConversion').style.display='flex'; } else document.getElementById('filaConversion').style.display='none'; document.getElementById('resultados').style.display='block'; }
+    function resetForm(){ document.getElementById('costoBruto').value=''; document.getElementById('rentabilidad').value=''; document.getElementById('resultados').style.display='none'; document.getElementById('trmInfo').style.display='none'; document.getElementById('conversionEnVivo').style.display='none'; currentTipo=''; document.getElementById('tipoMoneda').value='COP'; cambiarMoneda(); }
+    window.addEventListener('DOMContentLoaded',async()=>{ await cargarTRM(); llenarRentabilidad(); cambiarMoneda(); });
+  </script>
+</body>
+</html>
