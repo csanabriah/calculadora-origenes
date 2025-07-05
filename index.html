@@ -69,6 +69,7 @@
     }
     .result-item {
       display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap;
       padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.2);
     }
     .result-item:last-child {
@@ -87,6 +88,20 @@
     .input-group .form-control {
       border-left: none; border-radius: 0 12px 12px 0;
     }
+    /* Responsive font sizes */
+    @media (max-width: 576px) {
+      .form-label { font-size: .9rem; }
+      .form-control, .form-select { font-size: .9rem; }
+      .btn-calculate, .btn-reset { font-size: .9rem; padding: .75rem 1rem; }
+    }
+    @media (min-width: 577px) and (max-width: 992px) {
+      .form-label { font-size: 1rem; }
+      .form-control, .form-select { font-size: 1rem; }
+    }
+    @media (min-width: 993px) {
+      .form-label { font-size: 1.1rem; }
+      .form-control, .form-select { font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
@@ -94,123 +109,131 @@
   <header class="brand-header">
     <img src="outlet-logo.png" alt="Outlet Logo" class="logo-header">
     <h1 class="brand-logo mb-2">Vitrina Inc</h1>
-    <p class="lead mb-0">Calculadora de Precios Final</p>
+    <p class="lead mb-0">Calculadora de Precio Final</p>
   </header>
 
   <div class="container my-5">
-    <div class="row justify-content-center"><div class="col-lg-8">
-      <div class="card">
-        <div class="card-header text-center">
-          <h3><i class="fas fa-calculator me-2"></i>Calcular Precio Final</h3>
-        </div>
-        <div class="card-body p-4">
-
-          <!-- Tipo de Moneda -->
-          <div class="mb-4">
-            <label for="tipoMoneda" class="form-label">
-              <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
-            </label>
-            <select id="tipoMoneda" class="form-select" onchange="cambiarMoneda()">
-              <option value="COP" selected>Pesos Colombianos (COP)</option>
-              <option value="USD">Dólares Americanos (USD)</option>
-            </select>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header text-center">
+            <h3><i class="fas fa-calculator me-2"></i>Calcular Precio Final</h3>
           </div>
+          <div class="card-body p-4">
 
-          <!-- TRM -->
-          <div id="trmInfo" class="mb-4" style="display:none">
-            <div class="alert alert-info d-flex flex-column">
-              <div>
-                <i class="fas fa-exchange-alt me-2"></i>
-                <strong>TRM:</strong> $<span id="trmValue">0,00</span> COP por USD
-              </div>
-              <div id="trmFecha" style="font-size:.85rem;opacity:.8;margin-top:.25rem">
-                Actualizado: --
+            <!-- Tipo de Moneda -->
+            <div class="row mb-4 align-items-center">
+              <label for="tipoMoneda" class="col-sm-4 form-label">
+                <i class="fas fa-coins me-2 text-danger"></i>Tipo de Moneda
+              </label>
+              <div class="col-sm-8">
+                <select id="tipoMoneda" class="form-select" onchange="cambiarMoneda()">
+                  <option value="COP" selected>Pesos Colombianos (COP)</option>
+                  <option value="USD">Dólares Americanos (USD)</option>
+                </select>
               </div>
             </div>
-          </div>
 
-          <!-- Costo Bruto -->
-          <div class="mb-4">
-            <label for="costoBruto" class="form-label">
-              <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
-            </label>
-            <div class="input-group">
-              <span class="input-group-text" id="simboloMoneda">$</span>
-              <input type="number" id="costoBruto" class="form-control" min="0" step="0.01">
-              <span class="input-group-text" id="codigoMoneda">COP</span>
-            </div>
-            <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
-            <div id="conversionEnVivo" class="mt-2" style="display:none">
-              <div class="alert alert-secondary py-2">
-                <small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small>
+            <!-- TRM -->
+            <div id="trmInfo" class="mb-4" style="display:none">
+              <div class="alert alert-info d-flex flex-column">
+                <div>
+                  <i class="fas fa-exchange-alt me-2"></i>
+                  <strong>TRM:</strong> $<span id="trmValue">0,00</span> COP por USD
+                </div>
+                <div id="trmFecha" style="font-size:.85rem;opacity:.8;margin-top:.25rem">
+                  Actualizado: --
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Rentabilidad -->
-          <div class="mb-4">
-            <label for="rentabilidad" class="form-label">
-              <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
-            </label>
-            <select id="rentabilidad" class="form-select"></select>
-          </div>
-
-          <!-- Botones -->
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
-                <i class="fas fa-calculator me-2"></i>Calcular Precio
-              </button>
-            </div>
-            <div class="col-md-6 mb-3">
-              <button type="button" class="btn btn-reset w-100" onclick="resetForm()">
-                <i class="fas fa-refresh me-2"></i>Limpiar
-              </button>
-            </div>
-          </div>
-
-          <!-- Resultados -->
-          <div id="resultados" class="result-card fade-in" style="display:none">
-            <div class="text-center mb-3">
-              <div class="icon-container">
-                <i class="fas fa-receipt text-white fa-2x"></i>
+            <!-- Costo Bruto -->
+            <div class="row mb-4 align-items-center">
+              <label for="costoBruto" class="col-sm-4 form-label">
+                <i class="fas fa-dollar-sign me-2 text-danger"></i>Costo Bruto
+              </label>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-text" id="simboloMoneda">$</span>
+                  <input type="number" id="costoBruto" class="form-control" min="0" step="0.01">
+                  <span class="input-group-text" id="codigoMoneda">COP</span>
+                </div>
+                <div class="form-text" id="textoAyuda">Ingrese el costo base en pesos</div>
+                <div id="conversionEnVivo" class="mt-2" style="display:none">
+                  <div class="alert alert-secondary py-2">
+                    <small><strong>Conversión a COP:</strong> $<span id="valorConvertido">0,00</span></small>
+                  </div>
+                </div>
               </div>
-              <h4>Desglose de Costos</h4>
             </div>
 
-            <div class="result-item">
-              <span><i class="fas fa-box me-2"></i>Costo Bruto:</span>
-              <span class="currency" id="mostrarCostoBruto">$0,00 COP</span>
+            <!-- Rentabilidad -->
+            <div class="row mb-4 align-items-center">
+              <label for="rentabilidad" class="col-sm-4 form-label">
+                <i class="fas fa-percentage me-2 text-danger"></i>Rentabilidad
+              </label>
+              <div class="col-sm-8">
+                <select id="rentabilidad" class="form-select"></select>
+              </div>
             </div>
-            <div class="result-item" id="filaConversion" style="display:none">
-              <span><i class="fas fa-exchange-alt me-2"></i>Costo Original (USD):</span>
-              <span class="currency" id="mostrarCostoUSD">$0,00 USD</span>
+
+            <!-- Botones -->
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-calculate w-100" onclick="calcularPrecio()">
+                  <i class="fas fa-calculator me-2"></i>Calcular Precio
+                </button>
+              </div>
+              <div class="col-md-6 mb-3">
+                <button type="button" class="btn btn-reset w-100" onclick="resetForm()">
+                  <i class="fas fa-refresh me-2"></i>Limpiar
+                </button>
+              </div>
             </div>
-            <div class="result-item">
-              <span><i class="fas fa-chart-line me-2"></i>Rentabilidad (<span id="mostrarPorcentaje">0</span>%):</span>
-              <span class="currency" id="mostrarRentabilidad">$0,00 COP</span>
+
+            <!-- Resultados -->
+            <div id="resultados" class="result-card fade-in" style="display:none">
+              <div class="text-center mb-3">
+                <div class="icon-container">
+                  <i class="fas fa-receipt text-white fa-2x"></i>
+                </div>
+                <h4>Desglose de Costos</h4>
+              </div>
+
+              <div class="result-item">
+                <span><i class="fas fa-box me-2"></i>Costo Bruto:</span>
+                <span class="currency" id="mostrarCostoBruto">$0,00 COP</span>
+              </div>
+              <div class="result-item" id="filaConversion" style="display:none">
+                <span><i class="fas fa-exchange-alt me-2"></i>Costo Original (USD):</span>
+                <span class="currency" id="mostrarCostoUSD">$0,00 USD</span>
+              </div>
+              <div class="result-item">
+                <span><i class="fas fa-chart-line me-2"></i>Rentabilidad (<span id="mostrarPorcentaje">0</span>%):</span>
+                <span class="currency" id="mostrarRentabilidad">$0,00 COP</span>
+              </div>
+              <div class="result-item">
+                <span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span>
+                <span class="currency" id="mostrarPublicidad">$0,00 COP</span>
+              </div>
+              <div class="result-item">
+                <span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span>
+                <span class="currency">$1 000 COP</span>
+              </div>
+              <div class="result-item">
+                <span><i class="fas fa-truck me-2"></i>Costo de Envío:</span>
+                <span class="currency">$25 000 COP</span>
+              </div>
+              <div class="result-item">
+                <span><i class="fas fa-tags me-2"></i><strong>PRECIO FINAL:</strong></span>
+                <span class="currency" id="precioFinal">$0,00 COP</span>
+              </div>
             </div>
-            <div class="result-item">
-              <span><i class="fas fa-bullhorn me-2"></i>Publicidad (2%):</span>
-              <span class="currency" id="mostrarPublicidad">$0,00 COP</span>
-            </div>
-            <div class="result-item">
-              <span><i class="fas fa-cube me-2"></i>Costo de Empaque:</span>
-              <span class="currency">$1 000 COP</span>
-            </div>
-            <div class="result-item">
-              <span><i class="fas fa-truck me-2"></i>Costo de Envío:</span>
-              <span class="currency">$25 000 COP</span>
-            </div>
-            <div class="result-item">
-              <span><i class="fas fa-tags me-2"></i><strong>PRECIO FINAL:</strong></span>
-              <span class="currency" id="precioFinal">$0,00 COP</span>
-            </div>
+
           </div>
-
         </div>
       </div>
-    </div></div>
+    </div>
   </div>
 
   <footer class="text-center py-4" style="background: var(--vitrina-dark); color: white;">
@@ -261,84 +284,4 @@
       const input = document.getElementById('costoBruto');
       let val = parseFloat(input.value) || 0;
       if (val > 0 && newTipo !== currentTipo) {
-        if (currentTipo === 'COP' && newTipo === 'USD') {
-          val = val / TRM;
-          input.step = '0.01';
-          input.value = val.toFixed(2);
-        } else if (currentTipo === 'USD' && newTipo === 'COP') {
-          val = val * TRM;
-          input.step = '0.01';
-          input.value = val.toFixed(2);
-        }
-      }
-      document.getElementById('simboloMoneda').textContent = '$';
-      document.getElementById('codigoMoneda').textContent = newTipo;
-      document.getElementById('trmInfo').style.display = newTipo === 'USD' ? 'block' : 'none';
-      document.getElementById('conversionEnVivo').style.display = newTipo === 'USD' ? 'block' : 'none';
-      document.getElementById('textoAyuda').textContent =
-        newTipo === 'USD'
-          ? 'Ingrese el costo en dólares (se convertirá al calcular)'
-          : 'Ingrese el costo en pesos';
-      currentTipo = newTipo;
-    }
-
-    document.getElementById('costoBruto').addEventListener('input', function() {
-      const v = parseFloat(this.value) || 0;
-      document.getElementById('valorConvertido').textContent =
-        currentTipo === 'USD' && v > 0
-          ? (v * TRM).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-          : '0,00';
-    });
-
-    function calcularPrecio() {
-      const brutoIn = parseFloat(document.getElementById('costoBruto').value);
-      const pct = parseInt(document.getElementById('rentabilidad').value);
-      if (!brutoIn || !pct) {
-        alert('Complete todos los campos.');
-        return;
-      }
-      const brutoCOP = currentTipo === 'USD' ? brutoIn * TRM : brutoIn;
-      const renta = brutoCOP * (pct / 100);
-      const pub = brutoCOP * 0.02;
-      const final = brutoCOP + renta + pub + costoEmpaque + costoEnvio;
-
-      document.getElementById('mostrarCostoBruto').textContent =
-        `$${brutoCOP.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
-      document.getElementById('mostrarPorcentaje').textContent = pct;
-      document.getElementById('mostrarRentabilidad').textContent =
-        `$${renta.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
-      document.getElementById('mostrarPublicidad').textContent =
-        `$${pub.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
-      document.getElementById('precioFinal').textContent =
-        `$${final.toLocaleString('es-CO', { minimumFractionDigits: 2 })} COP`;
-
-      if (currentTipo === 'USD') {
-        document.getElementById('mostrarCostoUSD').textContent =
-          `$${brutoIn.toLocaleString('es-CO', { minimumFractionDigits: 2 })} USD`;
-        document.getElementById('filaConversion').style.display = 'flex';
-      } else {
-        document.getElementById('filaConversion').style.display = 'none';
-      }
-
-      document.getElementById('resultados').style.display = 'block';
-    }
-
-    function resetForm() {
-      document.getElementById('costoBruto').value = '';
-      document.getElementById('rentabilidad').value = '';
-      document.getElementById('resultados').style.display = 'none';
-      document.getElementById('trmInfo').style.display = 'none';
-      document.getElementById('conversionEnVivo').style.display = 'none';
-      document.getElementById('valorConvertido').textContent = '0,00';
-      document.getElementById('tipoMoneda').value = 'COP';
-      cambiarMoneda();
-    }
-
-    window.addEventListener('DOMContentLoaded', async () => {
-      await cargarTRM();
-      llenarRentabilidad();
-      cambiarMoneda();
-    });
-  </script>
-</body>
-</html>
+        if (currentTipo === 'COP' && newTipo === truncated for brevity
